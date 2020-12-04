@@ -12,8 +12,8 @@ class User {
     this.minat[0] = minat1;
     this.minat[1] = minat2;
     this.minat[2] = minat3;
-    followers = new User[100000000];
-    following = new User[100000000];
+    followers = new User[100];
+    following = new User[100];
     totalFollowers = 0;
     totalFollowing = 0;
   }
@@ -37,4 +37,13 @@ class User {
   public int getTotalFollowing() {
     return totalFollowing;
   }
+
+  public void addFollowers(User user){
+    this.followers[totalFollowers++] = user;
+  }
+
+  public void addFollowing(User user){
+    this.following[totalFollowing++] = user;
+  }
+
 }
