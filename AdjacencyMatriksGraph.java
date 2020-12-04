@@ -33,6 +33,17 @@ public class AdjacencyMatriksGraph {
     theQueue = new Queue();
   }
 
+  public User getUserVertex(String username){
+    User res = null;
+    for (int i = 0; i < nVerts; i++) {
+      if (username == vertexList[i].user.getName()) {
+        res = vertexList[i].user;
+        break;
+      }
+    }
+    return res;
+  }
+
   public int getVertexIndex(String username) {
     User user = null;
     for (int i = 0; i < nVerts; i++) {
