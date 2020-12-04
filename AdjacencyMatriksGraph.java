@@ -12,6 +12,7 @@ public class AdjacencyMatriksGraph {
   private final int MAX_VERTS = 20;
   private Vertex vertexList[];
   private int adjMat[][];
+  private int adjMatUndir[][];
   private int nVerts;
   private Stack theStack;
   private Queue theQueue;
@@ -21,19 +22,22 @@ public class AdjacencyMatriksGraph {
     vertexList = new Vertex[MAX_VERTS];
     // adjacency matrix
     adjMat = new int[MAX_VERTS][MAX_VERTS];
+    adjMatUndir = new int[MAX_VERTS][MAX_VERTS];
     nVerts = 0;
     for (int j = 0; j < MAX_VERTS; j++) // set adjacency
     {
       for (int k = 0; k < MAX_VERTS; k++) // matrix to 0
       {
         adjMat[j][k] = 0;
+        adjMatUndir[j][k] = 0;
       }
     }
     theStack = new Stack();
     theQueue = new Queue();
   }
 
-  public User getUserVertex(String username){
+
+  public User getUserVertex(String username) {
     User res = null;
     for (int i = 0; i < nVerts; i++) {
       if (username == vertexList[i].user.getName()) {
@@ -69,6 +73,8 @@ public class AdjacencyMatriksGraph {
 
   public void addEdge(int start, int end) {
     adjMat[start][end] = 1;
+    adjMatUndir[start][end] = 1;
+    adjMatUndir[end][start] = 1;
   }
 
   public int getAdjUnvisitedVertex(int v) {
@@ -81,7 +87,27 @@ public class AdjacencyMatriksGraph {
   }
 
   public void dfs(int x) {
-
+    vertexList[x].wasVisited = true; // karna dimulai dari node x maka wasVisited di set true (sudah dikunjungi)
+    theStack.push(x); // push vertex awal ke stack
+    while (!theStack.isEmpty()) // pada awal while, stack berisi vertex awal. Dan looping tidak berhenti hingga
+                                // stack kosong
+    {
+      int v = getAdjUnvisitedVertex(theStack.peek()); // memanggil methodnya, dimana pasti mengembalikan nilai integer
+                                                      // atau -1
+      if (v == -1) // cek jika tidak ada vertex lagi maka stack di pop
+      {
+        theStack.pop();
+      } else// jika ternyata masih ada vertex
+      {
+        vertexList[v].wasVisited = true;
+        displayVertex(v); // displayit
+        theStack.push(v); // pushit
+      }
+    } // endwhile
+    for (int j = 0; j < nVerts; j++) // reset flags
+    {
+      vertexList[j].wasVisited = false;
+    }
   }
 
   public void bfs(int x) {
@@ -94,6 +120,10 @@ public class AdjacencyMatriksGraph {
 
   public int getNVerts() {
     return nVerts;
+  }
+
+  public int[][] getAdjMatUndir() {
+    return adjMatUndir;
   }
 
   public void displayVertex(int v) {

@@ -21,7 +21,7 @@ class Twitty {
 
     user1.addFollowing(user2);
     user2.addFollowers(user1);
-    
+
     amGraph.addEdge(indexUser, indexUser2);
     System.out.println("connect_" + username + "_" + username2 + "_success");
   }
@@ -42,6 +42,7 @@ class Twitty {
     Vertex[] userList = getAllUser();
     int totalUser = getTotalUser();
     String followersTerbanyak[] = new String[totalUser];
+
     int max=0;
     for (int i = 0; i < totalUser; i++) {
       if(userList[i].user.getTotalFollowers()>max){
@@ -53,6 +54,26 @@ class Twitty {
       if(userList[i].user.getTotalFollowers()==max){
         followersTerbanyak[counter] = userList[i].user.getName();
         counter++;
+
+    int max = 0;
+    for (int i = 0; i < totalUser; i++) {
+      if (userList[i].user.getTotalFollowers() > max) {
+        max = userList[i].user.getTotalFollowers();
+      }
+    }
+    System.out.println(max);
+    int counter = 0;
+    for (int i = 0; i < totalUser; i++) {
+      if (userList[i].user.getTotalFollowers() == max) {
+        followersTerbanyak[counter++] = userList[i].user.getName();
+      }
+    }
+    for (int i = 0; i < followersTerbanyak.length; i++) {
+      if (followersTerbanyak[i] == null) {
+
+      } else {
+        System.out.println(followersTerbanyak[i]);
+
       }
     }
     System.out.println(Arrays.toString(followersTerbanyak));
@@ -63,7 +84,7 @@ class Twitty {
   }
 
   public void grouping() {
-
+    int n = amGraph.getAdjMatUndir().length;
   }
 
   public void topicDetection() {
