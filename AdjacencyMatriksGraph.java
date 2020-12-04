@@ -36,6 +36,7 @@ public class AdjacencyMatriksGraph {
     theQueue = new Queue();
   }
 
+
   public User getUserVertex(String username) {
     User res = null;
     for (int i = 0; i < nVerts; i++) {
@@ -128,5 +129,4 @@ public class AdjacencyMatriksGraph {
   public void displayVertex(int v) {
     System.out.print(vertexList[v].user);
   }
-
 }

@@ -42,6 +42,19 @@ class Twitty {
     Vertex[] userList = getAllUser();
     int totalUser = getTotalUser();
     String followersTerbanyak[] = new String[totalUser];
+
+    int max=0;
+    for (int i = 0; i < totalUser; i++) {
+      if(userList[i].user.getTotalFollowers()>max){
+        max = userList[i].user.getTotalFollowers();
+      }
+    }
+    int counter = 0;
+    for (int i = 0; i < totalUser; i++) {
+      if(userList[i].user.getTotalFollowers()==max){
+        followersTerbanyak[counter] = userList[i].user.getName();
+        counter++;
+
     int max = 0;
     for (int i = 0; i < totalUser; i++) {
       if (userList[i].user.getTotalFollowers() > max) {
@@ -60,8 +73,10 @@ class Twitty {
 
       } else {
         System.out.println(followersTerbanyak[i]);
+
       }
     }
+    System.out.println(Arrays.toString(followersTerbanyak));
   }
 
   public void minimumRetweet() {
