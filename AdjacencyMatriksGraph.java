@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 class Vertex {
   User user;
   boolean wasVisited;
@@ -16,6 +18,10 @@ public class AdjacencyMatriksGraph {
   private int nVerts;
   private Stack theStack;
   private Queue theQueue;
+  public int listGroup[][];
+  public LinkedList<Integer>[] ll = new LinkedList[20];;
+  private int temp;
+  public int count;
 
   public AdjacencyMatriksGraph() // constructor
   {
@@ -23,6 +29,7 @@ public class AdjacencyMatriksGraph {
     // adjacency matrix
     adjMat = new int[MAX_VERTS][MAX_VERTS];
     adjMatUndir = new int[MAX_VERTS][MAX_VERTS];
+    listGroup = new int[MAX_VERTS][MAX_VERTS];
     nVerts = 0;
     for (int j = 0; j < MAX_VERTS; j++) // set adjacency
     {
@@ -34,6 +41,7 @@ public class AdjacencyMatriksGraph {
     }
     theStack = new Stack();
     theQueue = new Queue();
+    temp = 0;
   }
 
   public User getUserVertex(String username) {
@@ -72,8 +80,8 @@ public class AdjacencyMatriksGraph {
 
   public void addEdge(int start, int end) {
     adjMat[start][end] = 1;
-    adjMatUndir[start][end] = 1;
-    adjMatUndir[end][start] = 1;
+    adjMatUndir[start][end] = end;
+    adjMatUndir[end][start] = start;
   }
 
   public int getAdjUnvisitedVertex(int v) {
@@ -85,33 +93,35 @@ public class AdjacencyMatriksGraph {
     return -1;
   }
 
-  public void dfs(int x) {
-    vertexList[x].wasVisited = true; // karna dimulai dari node x maka wasVisited di set true (sudah dikunjungi)
-    theStack.push(x); // push vertex awal ke stack
-    while (!theStack.isEmpty()) // pada awal while, stack berisi vertex awal. Dan looping tidak berhenti hingga
-                                // stack kosong
-    {
-      int v = getAdjUnvisitedVertex(theStack.peek()); // memanggil methodnya, dimana pasti mengembalikan nilai integer
-                                                      // atau -1
-      if (v == -1) // cek jika tidak ada vertex lagi maka stack di pop
-      {
-        theStack.pop();
-      } else// jika ternyata masih ada vertex
-      {
-        vertexList[v].wasVisited = true;
-        displayVertex(v); // displayit
-        theStack.push(v); // pushit
-      }
-    } // endwhile
-    for (int j = 0; j < nVerts; j++) // reset flags
-    {
-      vertexList[j].wasVisited = false;
+  public void DFSPath(int v, int target, boolean[] isVisited, Stack thes) {
+    if (v==target) {
+      // System.out.println(thes.peek());
+      return;
     }
+      isVisited[v] = true;
+      for (int i = 0; i < nVerts; i++) {
+        if (adjMat[v][i] == 1 && !isVisited[i]) {
+          thes.push(adjMat[v][i]);
+          DFSPath(i, target, isVisited, thes);
+          count++;
+          thes.pop();
+        }
+      }
+      isVisited[v] = false;
   }
 
-  public void bfs(int x) {
-
-  }
+  public int printAllPaths(int s, int d) 
+    { 
+        boolean[] isVisited = new boolean[nVerts]; 
+        Stack pathList = new Stack(); 
+  
+        // add source to path[] 
+        pathList.push(s); 
+  
+        // Call recursive utility 
+        DFSPath(s, d, isVisited, pathList); 
+        return count-1;
+    } 
 
   public Vertex[] getVertexList() {
     return vertexList;
@@ -127,6 +137,38 @@ public class AdjacencyMatriksGraph {
 
   public void displayVertex(int v) {
     System.out.print(vertexList[v].user);
+  }
+
+  void DFSUtil(int v, boolean[] visited) {
+    visited[v] = true;
+    ll[temp].addLast(v);
+    // Recur for all the vertices
+    // adjacent to this vertex
+    for (int i = 0; i < adjMatUndir[v].length; i++) {
+      if (!visited[adjMatUndir[v][i]]) {
+        DFSUtil(i, visited);
+      }
+    }
+  }
+
+  int connectedComponents() {
+    // Mark all the vertices as not visited
+    boolean[] visited = new boolean[nVerts];
+    int count = 0;
+    int s = 0;
+    for (int i = 0; i < nVerts; ++i) {
+      if (!visited[i]) {
+        ll[temp] = new LinkedList<>();
+        DFSUtil(i, visited);
+        count++;
+        temp++;
+      }
+    }
+    return count;
+  }
+
+  int[][] getListGroup() {
+    return listGroup;
   }
 
 }

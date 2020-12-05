@@ -4,7 +4,7 @@ class User {
   private int totalFollowers;
   private User following[];
   private int totalFollowing;
-  private String minat[];
+  public String minat[];
 
   public User(String name, String minat1, String minat2, String minat3) {
     this.name = name;
