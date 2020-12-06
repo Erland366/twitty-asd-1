@@ -1,3 +1,5 @@
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,6 +62,7 @@ class Main {
         }
       }
     }
+    // res.addLast(twittyApp.amGraph.seeGraphUnd());
     res.print();
     // User n1 = new User("dava", "bola", "mancing", "gunung");
     // User n2 = new User("diva", "mancing", "renang", "makan");
@@ -153,15 +156,12 @@ class Twitty {
     return res;
   }
 
-  public int minimumRetweet(String username, String username2) {
-    int indexUser = amGraph.getVertexIndex(username);
-    int indexUser2 = amGraph.getVertexIndex(username2);
-
-    User user1 = amGraph.getUserVertex(username);
-    User user2 = amGraph.getUserVertex(username2);
-
-    int c = amGraph.printAllPaths(indexUser2, indexUser);
-    return c;
+  public int minimumRetweet(String korban, String target) {
+    int count = -1;
+    int Korban = amGraph.getVertexIndex(korban);
+    boolean[] cek = new boolean[amGraph.getNVerts()];
+    int a = amGraph.getCounter(Korban, cek, count, target);
+    return a;
   }
 
   public int grouping() {
@@ -368,6 +368,7 @@ class AdjacencyMatriksGraph {
   public LinkedList<Integer>[] ll = new LinkedList[20];;
   private int temp;
   public int count;
+  int counter = -1;
 
   public AdjacencyMatriksGraph() // constructor
   {
@@ -388,6 +389,32 @@ class AdjacencyMatriksGraph {
     theStack = new Stack();
     theQueue = new Queue();
     temp = 0;
+  }
+
+  public String seeGraphUnd(){
+    String a = "";
+    for (int j = 0; j < MAX_VERTS; j++) // set adjacency
+    {
+      for (int k = 0; k < MAX_VERTS; k++) // matrix to 0
+      {
+        a += this.adjMatUndir[j][k] + " ";
+      }
+      a += "\n";
+    }
+    return a;
+  }
+
+  public String seeGraphDir(){
+    String a = "";
+    for (int j = 0; j < MAX_VERTS; j++) // set adjacency
+    {
+      for (int k = 0; k < MAX_VERTS; k++) // matrix to 0
+      {
+        a += this.adjMat[j][k] + " ";
+      }
+      a += "\n";
+    }
+    return a;
   }
 
   public User getUserVertex(String username) {
@@ -419,6 +446,11 @@ class AdjacencyMatriksGraph {
       res++;
     }
     return res;
+  }
+  
+  public int getCounter(int v, boolean[] visited, int count3,String target){
+    DFS(v, visited, count3, target);
+    return this.counter;
   }
 
   public void addVertex(User usr) {
@@ -457,6 +489,32 @@ class AdjacencyMatriksGraph {
     isVisited[v] = false;
   }
 
+  public String dfs(int x) // depth-firstsearch
+    { // beginatvertex0
+      String a = "";
+        vertexList[x].wasVisited = true; //karna dimulai dari node x maka wasVisited di set true (sudah dikunjungi)
+        displayVertex(x); // cetak vertex awal
+        theStack.push(x); // push vertex awal ke stack
+        while (!theStack.isEmpty()) // pada awal while, stack berisi vertex awal. Dan looping tidak berhenti hingga stack kosong
+        {
+            int v = getAdjUnvisitedVertex(theStack.peek()); // memanggil methodnya, dimana pasti mengembalikan nilai integer atau -1
+            if (v == -1) // cek jika tidak ada vertex lagi maka stack di pop
+            {
+                theStack.pop();
+            } else// jika ternyata masih ada vertex
+            {
+                vertexList[v].wasVisited = true;
+                a += this.getVertexList()[v].user.getName() + " ";
+                theStack.push(v); // pushit
+            }
+        } // endwhile
+        for (int j = 0; j < nVerts; j++) // reset flags
+        {
+            vertexList[j].wasVisited = false;
+        }
+        return a;
+    }
+
   public int printAllPaths(int s, int d) {
     boolean[] isVisited = new boolean[nVerts];
     Stack pathList = new Stack();
@@ -493,6 +551,22 @@ class AdjacencyMatriksGraph {
     for (int i = 0; i < adjMatUndir[v].length; i++) {
       if (!visited[adjMatUndir[v][i]]) {
         DFSUtil(i, visited);
+      }
+    }
+  }
+  
+  public void DFS(int v, boolean[] visited, int count3,String target){
+    if(vertexList[v].user.getName().equals(target)){
+      if(counter == -1 || counter > count3){
+        this.counter = count3;
+      }
+    }else{
+      visited[v]= true;
+      count3++;
+      for(int i = 0; i < nVerts; i++){
+        if(adjMat[v][i] == 1 && !visited[i]){
+          DFS(i, visited, count3, target);
+        }
       }
     }
   }
