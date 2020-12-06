@@ -1,1 +1,1 @@
-# Lanjut di branch [disini](https://github.com/davahamka/twitty-asd/blob/jadisatu/Main.java)
+# Lanjut di branch [ini](https://github.com/davahamka/twitty-asd/blob/jadisatu/Main.java)
